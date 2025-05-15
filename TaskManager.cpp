@@ -94,6 +94,9 @@ void TaskManager::load_file() {
 	in.close();
 }
 
+const std::vector<Employee*>& TaskManager::get_all_employees() { return employees; }
+const std::vector<Task*>& TaskManager::get_all_tasks() { return tasks; }
+
 void TaskManager::add_employee(Employee* employee) {
 	if (employee != nullptr) {
 		employees.push_back(employee);

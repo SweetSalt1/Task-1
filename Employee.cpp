@@ -2,7 +2,7 @@
 #include "Task.h"
 #include <iostream>
 using namespace std;
-Employee::Employee(const string& name, int hours_in_day) : _name(name), _hours_in_week(hours_in_day) {}
+Employee::Employee(const string& name, int hours_in_day) : _name(name), _hours_in_day(hours_in_day) {}
 
 const string& Employee::get_name() const { return _name; }
 int Employee::get_hours_in_day() { return  _hours_in_day; }

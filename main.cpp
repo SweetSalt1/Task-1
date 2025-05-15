@@ -36,7 +36,7 @@ int main() {
             int hours;
             std::cout << "Имя сотрудника: ";
             getline(cin, name);
-            std::cout << "Доступные часы в неделю: ";
+            std::cout << "Доступные часы в день: ";
             cin >> hours;
             manager.add_employee(new Employee(name, hours));
             break;

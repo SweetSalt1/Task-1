@@ -1,3 +1,31 @@
+void TaskManager::save_file() {
+	ofstream out("baze.txt");
+	if (!out.is_open()) {
+		cout << "Ошибка открытия файла для записи." << endl;
+		return;
+	}
+	// Записываем сотрудников в бд.
+	out << employees.size() << endl;
+	for (Employee* emp : employees) {
+		out << emp->get_name() << " " << emp->get_hours_in_day() << endl;
+	}
+	// Записываем задачи в бд.
+	out << tasks.size() << endl;
+	for (Task* task : tasks) {
+		out << task->get_id() << " ";
+		out << task->get_description() << " ";
+		out << task->get_workload_hours() << " ";
+		out << task->get_remaining_workload() << " ";
+		out << task->get_deadline_days() << " ";
+		out << task->get_status() << " ";
+		if (task->get_assigned_employee())
+			out << task->get_assigned_employee()->get_name() << endl;
+		else {
+			out << "NONE" << endl;
+		}
+	}
+	out.close();
+}
 void TaskManager::load_file() {
 	ifstream in("baze.txt");
 	if (!in.is_open()) {
@@ -62,6 +90,57 @@ void TaskManager::load_file() {
 	in.close();
 }
 
+void TaskManager::add_employee(Employee* employee) {
+	if (employee != nullptr) {
+		employees.push_back(employee);
+		cout << "Сотрудник " << employee->get_name() << " добавлен." << endl;
+	}
+}
+
+void TaskManager::remove_employee(Employee* employee) {
+	if (employee == nullptr) {
+		cout << "Ошибка удаления." << endl;
+		return;
+	}
+
+	for (Task* task : tasks) {
+		if (task != nullptr && task->get_assigned_employee() == employee) {
+			task->set_assigned_employee(nullptr);
+			employee->remove_task(task);
+			cout << "Задача откреплена." << endl;
+		}
+	}
+
+
+	for (size_t i = 0; i < employees.size(); i++) {
+		if (employees[i] == employee) {
+			employees.erase(employees.begin() + i);
+			cout << "Сотрудник " << employee->get_name() << " удален." << endl;
+			delete employee;
+			return;
+		}
+	}
+	cout << "Сотрудник не найден." << endl;
+}
+
+void TaskManager::search_employee(Employee* employee) {
+	if (employee == nullptr) {
+		cout << "Ошибка" << endl;
+		return;
+	}
+	for (Employee* emp : employees) {
+		if (emp == employee)
+		{
+			cout << " Информация о сотруднике" << endl;
+			cout << "Имя: " << emp->get_name() << endl;
+			cout << "Доступные часы в день: " << emp->get_hours_in_day() << endl;
+			cout << "Назначено задач: " << emp->get_tasks().size() << endl;
+			cout << "Занято часов: " << emp->total_assigned_hours() << endl;
+			return;
+		}
+	}
+	cout << "Сотрудник не найден" << endl;
+}
 
 void TaskManager::add_task(Task* task) {
 	if (task != nullptr) {

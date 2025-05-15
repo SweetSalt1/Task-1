@@ -1,3 +1,7 @@
+#include "TaskManager.h"
+using namespace std;
+TaskManager::TaskManager(): current_day(0) {}
+
 void TaskManager::save_file() {
 	ofstream out("baze.txt");
 	if (!out.is_open()) {
@@ -189,3 +193,104 @@ void TaskManager::search_task(int id) {
 	}
 	cout << "Задача с таким ID не найдена." << endl;
 };
+
+void TaskManager::assign_task_to_employee(Task* task, Employee* employee) {
+	if (task && employee)
+		employee->assign_task(task);
+}
+
+void TaskManager::see_employment(Employee* employee) {
+	if (employee->get_tasks().empty()) {
+		cout << "Работник свободен." << endl;
+	}
+	else {
+		cout << "Работник занят." << endl;
+	}
+}
+
+void TaskManager::see_status() {
+	for (Task* task : tasks) {
+		std::string status;
+		switch (task->get_status()) {
+		case 0: { 
+			status = "Не готово."; 
+			break; 
+		}
+		case 1: { 
+			status = "Просрочено."; 
+			break; 
+		}
+		case 2: { 
+			status = "Готово."; 
+			break; 
+		}
+		default: { 
+			status = "Неизвестно."; 
+			break; 
+		}
+		}
+		std::cout << "ID: " << task->get_id() << ", Описание: " << task->get_description() << ", Статус: " << status << std::endl;
+	}
+}
+
+void TaskManager::task_ready() {
+	for (Employee* emp : employees) {
+		auto emp_tasks = emp->get_tasks();
+		if (emp_tasks.empty()) continue;
+
+		int hours_per_task = emp->get_hours_in_day() / emp_tasks.size();
+
+		for (Task* task : emp_tasks) {
+			task->reduce_workload(hours_per_task);
+
+			if (task->get_remaining_workload() <= 0) {
+				task->set_status(2);  // Готово
+			}
+			else if (task->get_deadline_days() < 0) {
+				task->set_status(1);  // Просрочено
+			}
+			else {
+				task->set_status(0);  // Не готово
+			}
+		}
+	}
+}
+
+void TaskManager::end_day() {
+	current_day++;
+	for (Task* task : tasks) {
+		task->get_deadline_days()--;
+	}
+	task_ready();
+}
+
+void TaskManager::timeskip() {
+	int days;
+	cout << "Введите колличество дней, которые надо пропустить: ";
+	cin >> days;
+	for (int i = 0; i < days; i++) {
+		end_day();
+	}
+}
+
+void TaskManager::show_all_employment() {
+	if (employees.empty()) {
+		std::cout << "Список сотрудников пуст.\n";
+		return;
+	}
+
+	for (Employee* e : employees) {
+		std::cout << "Сотрудник: " << e->get_name() << std::endl;
+		const auto& tasks = e->get_tasks();
+		if (tasks.empty()) {
+			std::cout << "  - Свободен\n";
+		}
+		else {
+			std::cout << "  - Занят задачами:\n";
+			for (Task* task : tasks) {
+				std::cout << "      • Задача ID " << task->get_id()
+					<< ": " << task->get_description() << std::endl;
+			}
+		}
+	}
+}

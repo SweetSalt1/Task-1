@@ -1,9 +1,10 @@
+#pragma once
 #include <string>
 #include <iostream>
 #include <fstream>
 #include <vector>
 #include "Employee.h"
-#include "Tasdk.h"
+#include "Task.h"
 
 class TaskManager {
 private:
@@ -12,13 +13,19 @@ private:
 	int current_day;
 public:
 	TaskManager();
+	void save_file();
+	void load_file();
+
+	const std::vector<Employee*>& get_all_employees();
+	const std::vector<Task*>& get_all_tasks();
+
 	void add_employee(Employee* employee);
 	void remove_employee(Employee* employee);
 	void search_employee(Employee* employee);
 
 	void add_task(Task* task);
 	void remove_task(Task* task);
-	void search_task(Task* task);
+	void search_task(int id);
 
 	void assign_task_to_employee(Task* task, Employee* employee);
 
@@ -26,8 +33,10 @@ public:
 
 	void see_status();
 
-	void task_ready();						// ФОРМУЛА: готовность = трудоемкость - 7 * часы работника в день  (_status изменяется)
+	void task_ready();
 
-	void end_day();							// + 1 день и -1 день из дедлайна, если дедлайн < 0, то задача просрочена. Пользователь самостоятельно вызывает соответствующую комканду.
-	void timeskip();						// функция вызывает функцию end_day столько раз, сколько нужно пользователю.
+	void end_day();
+	void timeskip();
+
+	void show_all_employment();
 };

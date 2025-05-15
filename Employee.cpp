@@ -2,10 +2,10 @@
 #include "Task.h"
 #include <iostream>
 using namespace std;
-Employee::Employee(const string& name, int hours_in_week) : _name(name), _hours_in_week(hours_in_week) {}
+Employee::Employee(const string& name, int hours_in_day) : _name(name), _hours_in_day(hours_in_day) {}
 
 const string& Employee::get_name() const { return _name; }
-int Employee::get_hours_in_week() { return  _hours_in_week; }
+int Employee::get_hours_in_day() { return  _hours_in_day; }
 const vector<Task*>& Employee::get_tasks() const { return _tasks; }
 
 void Employee::assign_task(Task* task) {
@@ -25,7 +25,7 @@ void Employee::remove_task(Task* task) {
 }
 
 bool Employee::is_available() const {
-    return total_assigned_hours() < _hours_in_week;
+    return total_assigned_hours() < _hours_in_day;
 }
 
 int Employee::total_assigned_hours() const {

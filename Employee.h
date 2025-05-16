@@ -17,7 +17,7 @@ public:
 	/**
 	* @brief Конструктор сотрудника.
 	* @param name Имя сотрудника
-	* @param hours_in_week Количество доступных часов в неделю
+	* @param hours_in_day Количество доступных часов в день
 	*/
 	Employee(const std::string& name, int hours_in_day);
 	/**
